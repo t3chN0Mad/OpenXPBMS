@@ -3,7 +3,8 @@ An Open Source BMS(Battery Management System) for Valence XP Batteries that comm
 # Status : Early Development
 ## This repo has two main sections
 ### BMS 
-Arduino sketch to run the actual BMS. At this point, it is in early stages on development. The communication with the batteries has not been implemented yet.
+Arduino sketch to run the actual BMS. At this point, it is in early stages on development. Basic communication with the batteries has been implemented!
+More to come soon. Hop over to [https://diysolarforum.com/threads/interfacing-with-valence-built-in-monitoring.2183/] for more information.
 ### Utilities
 Scripts and other tools to run from a PC for diagnostic or research purposes.
 There is one script here currently. It allows you to obtain voltage and temperature readings from a battery assigned to ID 1.
