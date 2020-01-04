@@ -3,11 +3,11 @@ An Open Source BMS(Battery Management System) for Valence XP Batteries that comm
 # Status : Early Development
 ## This repo has two main sections
 ### BMS 
-Arduino sketch to run the actual BMS. At this point, it is in early stages on development. Basic communication with the batteries has been implemented!
+Arduino sketch to run the actual BMS. At this point, it is in early stages on development. Full functionality for monitoring (1) battery has been implemented!
 More to come soon. Hop over to [https://diysolarforum.com/threads/interfacing-with-valence-built-in-monitoring.2183/] for more information.
 ### Utilities
 Scripts and other tools to run from a PC for diagnostic or research purposes.
-There is one script here currently. It allows you to obtain voltage and temperature readings from a battery assigned to ID 1.
+There is one script here currently. It allows you to obtain voltage and temperature readings from a battery assigned to ID 1 using python.
 ## The general gist of how to communicate with the built-in modules
 Each battery communicates using a protocol similar to MODBUS over RS485.
 First a wake up command is broadcast over RS485 to wake up any battery modules on the line.
