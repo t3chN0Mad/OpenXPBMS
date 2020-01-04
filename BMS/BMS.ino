@@ -228,6 +228,8 @@ void loop()
     idw(r2, true);
   }
 
+  setNP();
+
   logData(" r1: " + String(idr(r1)));
   logData(" r2: " + String(idr(r2)));
 
@@ -256,6 +258,7 @@ bool idr(unsigned int r){
 
 // Same purpose as above, just for write(idw-invert digitalWrite)
 void idw(unsigned int r, bool state){
+  pinMode(r, OUTPUT);
   if (state)
   {
     digitalWrite(r, LOW);
