@@ -1,0 +1,205 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title "OpenXPBMS Schematic - For Adafruit Grand Central M4"
+Date "2020-01-04"
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L Adafruit:GrandCentralM4 U?
+U 1 1 5E11890F
+P 3350 4000
+F 0 "U?" H 3350 4000 50  0001 C CNN
+F 1 "GrandCentralM4" H 3367 4573 50  0000 C CNN
+F 2 "" H 3300 3950 50  0001 C CNN
+F 3 "" H 3300 3950 50  0001 C CNN
+	1    3350 4000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6700 4150 6700 4050
+$Comp
+L OpenXPBMS:LogicConverter U?
+U 1 1 5E122D03
+P 5300 4050
+F 0 "U?" H 5300 4525 50  0001 C CNN
+F 1 "LogicConverter" H 5300 4433 50  0000 C CNN
+F 2 "" H 5200 4000 50  0001 C CNN
+F 3 "" H 5200 4000 50  0001 C CNN
+	1    5300 4050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5700 4000 5850 4000
+Wire Wire Line
+	5850 4500 3800 4500
+Wire Wire Line
+	5700 4100 5800 4100
+Wire Wire Line
+	4900 4100 4850 4100
+Wire Wire Line
+	4350 3550 2900 3550
+Wire Wire Line
+	2900 3550 2900 3750
+Wire Wire Line
+	4450 3900 4450 3800
+Wire Wire Line
+	4450 3800 4900 3800
+NoConn ~ 4350 3900
+$Comp
+L OpenXPBMS:RS485 U?
+U 1 1 5E12E709
+P 7100 4100
+F 0 "U?" H 7100 4475 50  0001 C CNN
+F 1 "RS485" H 7100 4383 50  0000 C CNN
+F 2 "" H 7150 3800 50  0001 C CNN
+F 3 "" H 7150 3800 50  0001 C CNN
+	1    7100 4100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 4000 4300 4000
+Wire Wire Line
+	4500 3900 4900 3900
+NoConn ~ 4500 4000
+NoConn ~ 4300 4100
+Wire Wire Line
+	5700 3800 6300 3800
+Wire Wire Line
+	6300 4050 6700 4050
+Connection ~ 6700 4050
+Wire Wire Line
+	6300 4200 6300 4250
+Wire Wire Line
+	6300 4250 6700 4250
+Wire Wire Line
+	6400 3900 6400 3950
+Wire Wire Line
+	6400 3950 6700 3950
+NoConn ~ 6300 3900
+NoConn ~ 5850 4200
+NoConn ~ 5800 4200
+Wire Wire Line
+	4850 4400 2900 4400
+Wire Wire Line
+	2900 4400 2900 4200
+Wire Wire Line
+	2850 4450 2850 4050
+Wire Wire Line
+	2850 4050 2900 4050
+Wire Wire Line
+	2850 4450 5800 4450
+Wire Wire Line
+	2800 4500 2800 3900
+Wire Wire Line
+	2800 3900 2900 3900
+NoConn ~ 4850 4200
+Wire Wire Line
+	7500 3950 8400 3950
+Wire Wire Line
+	7500 4050 8400 4050
+Wire Wire Line
+	7500 4150 8400 4150
+Wire Wire Line
+	7500 4250 8400 4250
+Text Label 8400 3950 0    50   ~ 0
+PIN5
+Text Label 8400 4050 0    50   ~ 0
+PIN4
+Text Label 8400 4150 0    50   ~ 0
+PIN3
+Text Label 8400 4250 0    50   ~ 0
+PIN2
+Text Label 8400 3850 0    50   ~ 0
+AMP_CONNECTOR
+$Comp
+L OpenXPBMS:RelayBoard U?
+U 1 1 5E141414
+P 3550 5050
+F 0 "U?" H 3608 5475 50  0001 C CNN
+F 1 "RelayBoard" H 3608 5383 50  0000 C CNN
+F 2 "" H 3600 5050 50  0001 C CNN
+F 3 "" H 3600 5050 50  0001 C CNN
+	1    3550 5050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3800 4850 3800 4500
+Connection ~ 3800 4500
+Wire Wire Line
+	3800 4500 2800 4500
+Wire Wire Line
+	3800 4950 3850 4950
+Wire Wire Line
+	3850 4950 3850 3800
+Wire Wire Line
+	3850 3800 3800 3800
+NoConn ~ 3850 3900
+NoConn ~ 3850 4000
+NoConn ~ 3850 4100
+NoConn ~ 3850 4400
+NoConn ~ 3850 4450
+NoConn ~ 3850 4500
+Wire Wire Line
+	3800 5050 3900 5050
+Wire Wire Line
+	3900 5050 3900 3700
+Wire Wire Line
+	3900 3700 3800 3700
+NoConn ~ 3900 3900
+NoConn ~ 3900 4000
+NoConn ~ 3900 4100
+NoConn ~ 3900 4400
+NoConn ~ 3900 4450
+NoConn ~ 3900 4500
+Wire Wire Line
+	3800 5150 3950 5150
+Wire Wire Line
+	3950 5150 3950 4300
+Wire Wire Line
+	3950 4300 3800 4300
+NoConn ~ 3850 4300
+NoConn ~ 3900 4300
+Wire Wire Line
+	3800 5250 4000 5250
+Wire Wire Line
+	4000 5250 4000 4200
+Wire Wire Line
+	4000 4200 3800 4200
+NoConn ~ 3850 4200
+NoConn ~ 3900 4200
+Wire Wire Line
+	5800 4100 5800 4450
+Wire Wire Line
+	5850 4000 5850 4500
+Wire Wire Line
+	5700 4200 6300 4200
+Wire Wire Line
+	6300 3800 6300 4050
+Wire Wire Line
+	5700 3900 6400 3900
+Wire Wire Line
+	4300 4200 4900 4200
+Wire Wire Line
+	4850 4100 4850 4400
+Wire Wire Line
+	4300 4000 4300 4200
+Wire Wire Line
+	3800 4100 4500 4100
+Wire Wire Line
+	4350 4000 4900 4000
+Wire Wire Line
+	4500 3900 4500 4100
+Wire Wire Line
+	4350 3550 4350 4000
+Wire Wire Line
+	3800 3900 4450 3900
+$EndSCHEMATC
