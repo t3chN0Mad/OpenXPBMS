@@ -17,6 +17,7 @@
 #include <Arduino.h> // required before wiring_private.h
 #include <Adafruit_NeoPixel.h>
 #include <SD.h>
+#include <Crc16.h>
 #include "wiring_private.h" // pinPeripheral() function
 
 // Set digital out pin numbers for relays. r1 is the battery disconnect and r2 is a pv array disconnect.
@@ -28,7 +29,7 @@
 #define enablePin 17
 
 // Set slave numbers for batteries you want to communicate
-unsigned int batteries[1] = {1};
+byte batteries[1] = {0x01};
 // Set BMS thresholds - mV and C
 unsigned int battHighV = 3600;
 unsigned int battLowV = 3000;
@@ -39,8 +40,8 @@ bool r1status = true;
 bool r2status = true;
 // Commands to send to the batteries. Currently only supports 1 battery(No dynamic addressing and CRC for other batteries)
 byte messageW[] = {0x00, 0x00, 0x01, 0x01, 0xc0, 0x74, 0x0d, 0x0a, 0x00, 0x00};
-byte messageV[] = {0x01, 0x03, 0x00, 0x45, 0x00, 0x09, 0x94, 0x19, 0x0d, 0x0a};
-byte messageT[] = {0x01, 0x03, 0x00, 0x50, 0x00, 0x07, 0x04, 0x19, 0x0d, 0x0a};
+byte readVolts[] = {0x00, 0x03, 0x00, 0x45, 0x00, 0x09, 0x00, 0x00, 0x0d, 0x0a};
+byte readTemps[] = {0x00, 0x03, 0x00, 0x50, 0x00, 0x07, 0x00, 0x00, 0x0d, 0x0a};
 
 // Pin number and count for onboard NeoPixel. It is used as a status indicator.
 unsigned int npp = 88;
@@ -80,6 +81,8 @@ void setup()
 
   // Broadcast wakeup message to batteries
   wakeup();
+
+  Serial2.begin(115200, SERIAL_8E1);
 }
 
 void loop()
@@ -88,13 +91,15 @@ void loop()
   unsigned int countFailures = 0;
 
   // Iterate through all of the batteries connected to the BMS.
-  for (int i = 0; i < sizeof(batteries) / sizeof(int); i++)
+  for (int i = 0; i < sizeof(batteries) / sizeof(byte); i++)
   {
-    Serial2.begin(115200, SERIAL_8E1);
+    readVolts[0] = batteries[i];
+    readVolts[6] = lowByte(ModRTU_CRC(readVolts, 6));
+    readVolts[7] = highByte(ModRTU_CRC(readVolts, 6));
     preTransmission();
-    Serial2.write(messageV, sizeof(messageV));
-    Serial2.flush();
     startTime = millis();
+    Serial2.write(readVolts, sizeof(readVolts));
+    Serial2.flush();
     postTransmission();
     byte resV[25];
     currentTime = millis();
@@ -113,10 +118,10 @@ void loop()
           resV[a] = b;
         }
         unsigned int volts[4] = {(resV[9] * 256) + resV[10], (resV[11] * 256) + resV[12], (resV[13] * 256) + resV[14], (resV[15] * 256) + resV[16]};
-        logData("Volts1: " + String(volts[0]));
-        logData(" Volts2: " + String(volts[1]));
-        logData(" Volts3: " + String(volts[2]));
-        logData(" Volts4: " + String(volts[3]));
+        logData("V1: " + String(volts[0]));
+        logData(" V2: " + String(volts[1]));
+        logData(" V3: " + String(volts[2]));
+        logData(" V4: " + String(volts[3]));
         logData(" Total: " + String(volts[0] + volts[1] + volts[2] + volts[3]));
         // Clean out the buffer after reading the response
         while (Serial.available())
@@ -154,11 +159,13 @@ void loop()
         }
       }
     }
-    Serial2.begin(115200, SERIAL_8E1);
+    readTemps[0] = batteries[i];
+    readTemps[6] = lowByte(ModRTU_CRC(readTemps, 6));
+    readTemps[7] = highByte(ModRTU_CRC(readTemps, 6));
     preTransmission();
-    Serial2.write(messageT, sizeof(messageT));
-    Serial2.flush();
     startTime = millis();
+    Serial2.write(readTemps, sizeof(readTemps));
+    Serial2.flush();
     postTransmission();
     byte resT[21];
     currentTime = millis();
@@ -177,11 +184,11 @@ void loop()
           resT[a] = b;
         }
         int temps[5] = {(resT[5] * 256) + resT[6], (resT[7] * 256) + resT[8], (resT[9] * 256) + resT[10], (resT[11] * 256) + resT[12], (resT[3] * 256) + resT[4]};
-        logData(" Temp1: " + String(temps[0]));
-        logData(" Temp2: " + String(temps[1]));
-        logData(" Temp3: " + String(temps[2]));
-        logData(" Temp4: " + String(temps[3]));
-        logData(" Temp5: " + String(temps[4]));
+        logData(" T1: " + String(temps[0]));
+        logData(" T2: " + String(temps[1]));
+        logData(" T3: " + String(temps[2]));
+        logData(" T4: " + String(temps[3]));
+        logData(" T5: " + String(temps[4]));
         //clean out the buffer after reading the response
         while (Serial.available())
           Serial.read();
@@ -219,12 +226,12 @@ void loop()
 
   //Light up the NeoPixel with the correct status color according to relay status(Green-Both ON, Orange-Solar OFF/Main ON, Red-Both OFF) Solar ON/Main OFF should not be possible!
 
-  
+
   // Read status' and see if the relays should be enabled
-  if(r1status){
+  if (r1status) {
     idw(r1, true);
   }
-  if(r2status){
+  if (r2status) {
     idw(r2, true);
   }
 
@@ -248,7 +255,7 @@ void loop()
 }
 
 // Gives actual status of the relays, which is inverse of the pin(idr-invert digitalRead)
-bool idr(unsigned int r){
+bool idr(unsigned int r) {
   if (digitalRead(r))
   {
     return false;
@@ -257,7 +264,7 @@ bool idr(unsigned int r){
 }
 
 // Same purpose as above, just for write(idw-invert digitalWrite)
-void idw(unsigned int r, bool state){
+void idw(unsigned int r, bool state) {
   pinMode(r, OUTPUT);
   if (state)
   {
@@ -269,29 +276,29 @@ void idw(unsigned int r, bool state){
 }
 
 // Data logging and console output all in one!
-void logData(String data){
+void logData(String data) {
   File dataLog = SD.open("datalog.txt", FILE_WRITE);
-  if (dataLog){
+  if (dataLog) {
     dataLog.print(data);
     dataLog.close();
-  }else{
+  } else {
     Serial.println("Can't open SD datalog file.");
   }
   Serial.print(data);
 }
 
 //Needed for RS485 half duplex communication
-void preTransmission(){
+void preTransmission() {
   digitalWrite(enablePin, 1);
   //delay(1);
 }
 
-void postTransmission(){
+void postTransmission() {
   digitalWrite(enablePin, 0);
   //delay(1);
 }
 
-void wakeup(){
+void wakeup() {
   Serial2.begin(9600, SERIAL_8N2);
   preTransmission();
   Serial2.write(messageW, sizeof(messageW));
@@ -299,7 +306,7 @@ void wakeup(){
   postTransmission();
 }
 
-void shutdownAll(){
+void shutdownAll() {
   // Shutdown pv array first
   r2status = false;
   idw(r2, r2status);
@@ -311,7 +318,7 @@ void shutdownAll(){
   logData("Entire system was disconnected.");
 }
 
-void shutdownPv(){
+void shutdownPv() {
   // Shutdown pv array, leave battery alone.
   r2status = false;
   idw(r2, r2status);
@@ -319,15 +326,15 @@ void shutdownPv(){
   logData("Pv array was disconnected.");
 }
 
-void setNP(){
-  if (r1status && r2status){
+void setNP() {
+  if (r1status && r2status) {
     np.setPixelColor(0, 0, 10, 0);
     np.show();
   }
-  else if (r1status && !r2status){
+  else if (r1status && !r2status) {
     np.setPixelColor(0, 10, 2, 0);
     np.show();
-  }else{
+  } else {
     np.setPixelColor(0, 10, 0, 0);
     np.show();
   }
@@ -350,3 +357,25 @@ void SERCOM4_3_Handler()
 {
   Serial2.IrqHandler();
 }
+
+// Compute the MODBUS RTU CRC
+// Adapted from https://ctlsys.com/support/how_to_compute_the_modbus_rtu_message_crc/
+uint16_t ModRTU_CRC(byte buf[], int len)
+{
+  uint16_t crc = 0xFFFF;
+  
+  for (int pos = 0; pos < len; pos++) {
+    crc ^= (uint16_t)buf[pos];          // XOR byte into least sig. byte of crc
+  
+    for (int i = 8; i != 0; i--) {    // Loop over each bit
+      if ((crc & 0x0001) != 0) {      // If the LSB is set
+        crc >>= 1;                    // Shift right and XOR 0xA001
+        crc ^= 0xA001;
+      }
+      else                            // Else LSB is not set
+        crc >>= 1;                    // Just shift right
+    }
+  }
+  // Note, this number has low and high bytes swapped, so use it accordingly (or swap bytes)
+  return crc;  
+};
