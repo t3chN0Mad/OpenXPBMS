@@ -3,8 +3,8 @@ An Open Source BMS(Battery Management System) for Valence XP Batteries that comm
 # Status : Early Development
 ## This repo has three main sections
 ### BMS 
-Arduino sketch to run the actual BMS. At this point, it is in early stages on development. Full functionality for monitoring (1) battery has been implemented!
-More to come soon. Hop over to [https://diysolarforum.com/threads/interfacing-with-valence-built-in-monitoring.2183/] for more information.
+Arduino sketch to run the actual BMS. At this point, it is in early stages on development. Full functionality for monitoring (1) battery has been implemented! CRC HAS NOW BEEN IMPLEMENTED! Please post feedback on use with multiple batteries!
+Hop over to [https://diysolarforum.com/threads/interfacing-with-valence-built-in-monitoring.2183/] for more information.
 ### PCB
 This directory now has a basic KiCad schematic showing how the modules should be connected together. In the future there will also be KiCad PCB design files in order to solder everything to one board.
 ### Utilities
