@@ -17,7 +17,6 @@
 #include <Arduino.h> // required before wiring_private.h
 #include <Adafruit_NeoPixel.h>
 #include <SD.h>
-#include <Crc16.h>
 #include "wiring_private.h" // pinPeripheral() function
 
 // Set digital out pin numbers for relays. r1 is the battery disconnect and r2 is a pv array disconnect.
