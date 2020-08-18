@@ -28,7 +28,7 @@
 #define enablePin 17
 
 // Set slave numbers for batteries you want to communicate
-byte batteries[1] = {0x01};
+byte batteries[] = {0x01};
 // Set BMS thresholds - mV and C
 unsigned int battHighV = 3600;
 unsigned int battLowV = 3000;
